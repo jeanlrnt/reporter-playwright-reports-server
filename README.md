@@ -4,7 +4,7 @@ Playwright reporter that uploads results to Playwright Reports Server - https://
 
 ## Install
 
-`npm i -D reporter-playwright-reports-server`
+`npm i -D @cyborgtests/reporter-playwright-reports-server`
 
 Then, in playwright.config file:
 ```js
@@ -12,7 +12,7 @@ Then, in playwright.config file:
     // blob reporter is required, produced zip would be uploaded
     ['blob', { outputFile: 'test-results/blob.zip' }],
     [
-      'reporter-playwright-reports-server',
+      '@cyborgtests/reporter-playwright-reports-server',
       {
         /** 
          * Your server url 
