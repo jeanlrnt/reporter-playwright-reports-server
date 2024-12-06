@@ -46,14 +46,11 @@ class ReporterPlaywrightReportsServer implements Reporter {
     }
 
     this.rpOptions = { ...DEFAULT_OPTIONS, ...options };
-    console.debug(`[ReporterPlaywrightReportsServer] running with ${JSON.stringify(options, null, 2)}`);
   }
 
   onBegin(config: FullConfig, suite: Suite) {
     this.blobPath = path.join(process.cwd(), this.rpOptions.reportPath);
     this.blobName = path.basename(this.blobPath);
-
-    console.debug(`[ReporterPlaywrightReportsServer] blob file path: ${this.blobPath}`);
   }
 
   async onEnd(result: FullResult) {
@@ -97,8 +94,8 @@ class ReporterPlaywrightReportsServer implements Reporter {
       resultData = (await resp.json()).data;
     } else {
       resultData = { resultID: '123' };
-      console.debug('[ReporterPlaywrightReportsServer] result uploaded: ', resultData);
     }
+    console.debug('[ReporterPlaywrightReportsServer] blob result uploaded: ', resultData);
 
     if (this.rpOptions.triggerReportGeneration === true) {
       let report;
