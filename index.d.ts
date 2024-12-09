@@ -1,5 +1,6 @@
-import type { FullConfig, FullResult, Reporter, Suite } from '@playwright/test/reporter';
+import type { FullConfig, Reporter } from '@playwright/test/reporter';
 type ReporterOptions = {
+    enabled?: boolean;
     url: string;
     reportPath: string;
     token?: string;
@@ -15,7 +16,7 @@ declare class ReporterPlaywrightReportsServer implements Reporter {
     blobPath: string | undefined;
     blobName: string | undefined;
     constructor(options: ReporterOptions);
-    onBegin(config: FullConfig, suite: Suite): void;
-    onEnd(result: FullResult): Promise<void>;
+    onBegin(): void;
+    onEnd(): Promise<void>;
 }
 export default ReporterPlaywrightReportsServer;

@@ -1,19 +1,21 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { request } from '@playwright/test';
-import type { FullConfig, FullResult, Reporter, Suite } from '@playwright/test/reporter';
+import type { FullConfig, Reporter /*, FullResult, Suite */ } from '@playwright/test/reporter';
 
 // reporter: [
-//   ['list'],
 //   ['reporter-playwright-reports-server', {
 //       url: 'http://localhost:3000/'
 //       resultDetails: {
+//           browser: 'chromium',
+//           foo: 'bar',
 //       },
 //       triggerReportGeneration: true
 //   }]
 // ]
 
 type ReporterOptions = {
+  enabled?: boolean;
   url: string;
   reportPath: string;
   token?: string;
@@ -25,6 +27,7 @@ type ReporterOptions = {
 };
 
 const DEFAULT_OPTIONS: Omit<ReporterOptions, 'url' | 'reportPath'> = {
+  enabled: true,
   resultDetails: {},
   triggerReportGeneration: true,
   dryRun: false,
@@ -37,23 +40,31 @@ class ReporterPlaywrightReportsServer implements Reporter {
   blobName: string | undefined;
 
   constructor(options: ReporterOptions) {
-    if (!options.url) {
+    this.rpOptions = { ...DEFAULT_OPTIONS, ...options };
+    if (this.rpOptions.enabled === false) {
+      return;
+    }
+    if (!this.rpOptions.url) {
       throw new Error('[ReporterPlaywrightReportsServer] url is required, cannot run without it');
     }
 
-    if (!options.reportPath) {
+    if (!this.rpOptions.reportPath) {
       throw new Error('[ReporterPlaywrightReportsServer] reportPath is required, cannot run without it');
     }
-
-    this.rpOptions = { ...DEFAULT_OPTIONS, ...options };
   }
 
-  onBegin(config: FullConfig, suite: Suite) {
+  onBegin(/*config: FullConfig, suite: Suite*/) {
+    if (this.rpOptions.enabled === false) {
+      return;
+    }
     this.blobPath = path.join(process.cwd(), this.rpOptions.reportPath);
     this.blobName = path.basename(this.blobPath);
   }
 
-  async onEnd(result: FullResult) {
+  async onEnd(/*result: FullResult*/) {
+    if (this.rpOptions.enabled === false) {
+      return;
+    }
     if (this.blobPath === undefined) {
       throw new Error('[ReporterPlaywrightReportsServer] Blob file path is absent. Results cannot be uploaded');
     }

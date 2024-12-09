@@ -7,27 +7,35 @@ const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 const test_1 = require("@playwright/test");
 const DEFAULT_OPTIONS = {
+    enabled: true,
     resultDetails: {},
     triggerReportGeneration: true,
     dryRun: false,
 };
 class ReporterPlaywrightReportsServer {
     constructor(options) {
-        if (!options.url) {
+        this.rpOptions = { ...DEFAULT_OPTIONS, ...options };
+        if (this.rpOptions.enabled === false) {
+            return;
+        }
+        if (!this.rpOptions.url) {
             throw new Error('[ReporterPlaywrightReportsServer] url is required, cannot run without it');
         }
-        if (!options.reportPath) {
+        if (!this.rpOptions.reportPath) {
             throw new Error('[ReporterPlaywrightReportsServer] reportPath is required, cannot run without it');
         }
-        this.rpOptions = { ...DEFAULT_OPTIONS, ...options };
-        console.debug(`[ReporterPlaywrightReportsServer] running with ${JSON.stringify(options, null, 2)}`);
     }
-    onBegin(config, suite) {
+    onBegin( /*config: FullConfig, suite: Suite*/) {
+        if (this.rpOptions.enabled === false) {
+            return;
+        }
         this.blobPath = path_1.default.join(process.cwd(), this.rpOptions.reportPath);
         this.blobName = path_1.default.basename(this.blobPath);
-        console.debug(`[ReporterPlaywrightReportsServer] blob file path: ${this.blobPath}`);
     }
-    async onEnd(result) {
+    async onEnd( /*result: FullResult*/) {
+        if (this.rpOptions.enabled === false) {
+            return;
+        }
         if (this.blobPath === undefined) {
             throw new Error('[ReporterPlaywrightReportsServer] Blob file path is absent. Results cannot be uploaded');
         }
@@ -64,8 +72,8 @@ class ReporterPlaywrightReportsServer {
         }
         else {
             resultData = { resultID: '123' };
-            console.debug('[ReporterPlaywrightReportsServer] result uploaded: ', resultData);
         }
+        console.debug('[ReporterPlaywrightReportsServer] blob result uploaded: ', resultData);
         if (this.rpOptions.triggerReportGeneration === true) {
             let report;
             if (this.rpOptions.dryRun === false) {

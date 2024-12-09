@@ -14,6 +14,8 @@ Then, in playwright.config file:
     [
       '@cyborgtests/reporter-playwright-reports-server',
       {
+        // true by default. Use this if you need to skip this reporter for some cases (local executions for example)
+        enable: true,
         /** 
          * Your server url 
          * @see https://github.com/CyborgTests/playwright-reports-server
