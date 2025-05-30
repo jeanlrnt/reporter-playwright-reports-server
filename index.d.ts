@@ -1,5 +1,5 @@
 import type { FullConfig, Reporter } from '@playwright/test/reporter';
-type ReporterOptions = {
+export type ReporterOptions = {
     enabled?: boolean;
     url: string;
     reportPath: string;
