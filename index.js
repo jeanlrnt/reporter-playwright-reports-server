@@ -56,6 +56,8 @@ class ReporterPlaywrightReportsServer {
                 : {},
         });
         const resultDetails = this.rpOptions.resultDetails === undefined ? {} : this.rpOptions.resultDetails;
+        // Replace undefined values with empty strings
+        Object.assign(resultDetails, Object.fromEntries(Object.entries(resultDetails).map(([key, value]) => [key, value === undefined ? '' : value])));
         let resultResponse;
         const url = this.rpOptions.url.endsWith('/') ? this.rpOptions.url.slice(0, -1) : this.rpOptions.url;
         const shard = this.pwConfig.shard;
