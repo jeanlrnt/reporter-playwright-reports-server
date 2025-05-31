@@ -52,9 +52,7 @@ test('Report should upload if resultDetails has undefined value', async () => {
     await reporter.onEnd();
     noError = true;
   } catch (err) {
-    expect((err as Error).message).toContain(
-      '[ReporterPlaywrightReportsServer] blob result uploaded:',
-    );
+    expect((err as Error).message).toContain('[ReporterPlaywrightReportsServer] blob result uploaded:');
     expect((err as Error).message).toContain("foo: ''");
     expect((err as Error).message).toContain('bar: barValue');
   }
