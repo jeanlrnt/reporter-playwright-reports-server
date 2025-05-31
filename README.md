@@ -21,7 +21,7 @@ Then, in playwright.config file:
          * Your server url
          * @see https://github.com/CyborgTests/playwright-reports-server
          */
-        url: 'https://your server instance.com',
+        url: 'https://your-server-instance.com',
         // Set token if your server instance has authentication enabled
         token: '1234',
         reportPath: 'test-results/blob.zip',
